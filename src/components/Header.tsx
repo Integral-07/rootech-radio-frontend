@@ -1,27 +1,7 @@
-import { useState, useEffect, useRef } from "react"
 import { Link } from "react-router-dom"
 import { ThemeToggle } from "./ThemeToggle"
 
 export const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsMenuOpen(false)
-      }
-    }
-
-    if (isMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isMenuOpen])
-
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border">
       <div className="mx-auto max-w-6xl px-4 h-16 flex items-center justify-between">
@@ -49,62 +29,38 @@ export const Header = () => {
           </div>
           <div className="flex flex-col">
             <h1 className="text-xl font-bold text-foreground">
-              ManaTech Radio
+              Rootech Radio
             </h1>
-            <p className="text-xs text-muted-foreground hidden sm:block">
-              AI-Generated Tech Podcast
+            <p className="text-xs text-muted-foreground hidden sm:flex items-center gap-1 font-mono tracking-tight">
+              <span className="text-primary">$</span>
+              <span>sudo rootech --daily</span>
+              <span className="inline-block w-[0.5em] h-[1em] bg-primary/70 animate-[terminal-blink_1s_steps(1)_infinite]" />
             </p>
           </div>
         </Link>
 
         {/* Right side */}
-        <div className="flex items-center gap-3 relative">
-          <ThemeToggle />
-          <div ref={menuRef} className="relative">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="flex items-center justify-center w-9 h-9 rounded-lg border-2 border-primary/30 bg-primary/10 hover:bg-primary/20 hover:border-primary transition-colors text-foreground"
-              aria-label="Menu"
+        <div className="flex items-center gap-3">
+          <Link
+            to="/feedback"
+            className="flex items-center gap-2 h-9 px-3 rounded-lg border-2 border-primary/30 bg-primary/10 hover:bg-primary/20 hover:border-primary transition-colors text-sm font-medium text-foreground"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="20"
-                height="20"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-              </svg>
-            </button>
-
-            {/* Dropdown Menu */}
-            {isMenuOpen && (
-              <div className="absolute top-12 right-0 w-56 bg-card border border-border rounded-lg shadow-lg overflow-hidden">
-                <nav className="py-2">
-                  <Link
-                    to="/podcasts"
-                    className="block px-4 py-3 text-sm text-foreground hover:bg-primary/10 transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    過去のポッドキャスト
-                  </Link>
-                  <Link
-                    to="/trends"
-                    className="block px-4 py-3 text-sm text-foreground hover:bg-primary/10 transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    トレンド
-                  </Link>
-                </nav>
-              </div>
-            )}
-          </div>
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+            </svg>
+            <span className="hidden sm:inline">感想・要望</span>
+          </Link>
+          <ThemeToggle />
         </div>
       </div>
     </header>

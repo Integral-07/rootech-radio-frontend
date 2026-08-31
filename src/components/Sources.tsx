@@ -1,17 +1,17 @@
 import { useState } from "react"
-import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
-import remarkBreaks from "remark-breaks"
+import { Source } from "../lib/api"
 
-interface ScriptViewerProps {
-  script: string
+interface SourcesProps {
+  sources: Source[]
 }
 
-export const ScriptViewer: React.FC<ScriptViewerProps> = ({ script }) => {
+export const Sources: React.FC<SourcesProps> = ({ sources }) => {
   const [isOpen, setIsOpen] = useState(false)
 
+  if (sources.length === 0) return null
+
   return (
-    <div className="rounded-xl border-2 border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 shadow-lg shadow-primary/5 overflow-hidden">
+    <div className="mt-6 rounded-xl border-2 border-primary/20 bg-gradient-to-br from-card via-card to-primary/5 shadow-lg shadow-primary/5 overflow-hidden">
       <button
         type="button"
         onClick={() => setIsOpen((open) => !open)}
@@ -32,14 +32,11 @@ export const ScriptViewer: React.FC<ScriptViewerProps> = ({ script }) => {
               strokeLinejoin="round"
               className="text-primary sm:w-5 sm:h-5"
             >
-              <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
-              <polyline points="14 2 14 8 20 8" />
-              <line x1="16" x2="8" y1="13" y2="13" />
-              <line x1="16" x2="8" y1="17" y2="17" />
-              <line x1="10" x2="8" y1="9" y2="9" />
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
             </svg>
           </div>
-          <h2 className="text-base sm:text-xl font-semibold text-primary truncate">スクリプト</h2>
+          <h2 className="text-base sm:text-xl font-semibold text-primary truncate">参考文献</h2>
         </div>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -57,10 +54,21 @@ export const ScriptViewer: React.FC<ScriptViewerProps> = ({ script }) => {
         </svg>
       </button>
       {isOpen && (
-        <div className="p-4 sm:p-6 md:p-8">
-          <div className="markdown-body prose prose-base max-w-none prose-p:leading-[1.8]">
-            <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>{script}</ReactMarkdown>
-          </div>
+        <div className="p-4 sm:p-6">
+          <ul className="space-y-3">
+            {sources.map((source, index) => (
+              <li key={index}>
+                <a
+                  href={source.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sm text-foreground hover:text-primary transition-colors underline underline-offset-2 decoration-primary/30"
+                >
+                  {source.title}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>

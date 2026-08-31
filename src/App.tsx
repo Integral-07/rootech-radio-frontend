@@ -1,8 +1,10 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { Header } from './components/Header'
-import { EpisodeDetail } from './pages/EpisodeDetail'
-import { PodcastList } from './pages/PodcastList'
-import { Trends } from './pages/Trends'
+import { Home } from './pages/Home'
+import { Feedback } from './pages/Feedback'
+
+// 過去回一覧(/podcasts)とトレンド(/trends)は取説記載の通り今回のスコープ外。
+// 旧バックエンド(localhost:8000)前提のまま残っており、新APIへの移行は別途対応する。
 
 function App() {
   return (
@@ -10,9 +12,8 @@ function App() {
       <div className="min-h-screen">
         <Header />
         <Routes>
-          <Route path="/" element={<EpisodeDetail />} />
-          <Route path="/podcasts" element={<PodcastList />} />
-          <Route path="/trends" element={<Trends />} />
+          <Route path="/" element={<Home />} />
+          <Route path="/feedback" element={<Feedback />} />
         </Routes>
       </div>
     </BrowserRouter>

@@ -1,62 +1,62 @@
 import axios from 'axios'
 
-const API_BASE_URL = 'http://localhost:8000/api'
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL
+const FEEDBACK_API_BASE_URL = import.meta.env.VITE_FEEDBACK_API_BASE_URL
+
+if (!API_BASE_URL || !FEEDBACK_API_BASE_URL) {
+  throw new Error('VITE_API_BASE_URL / VITE_FEEDBACK_API_BASE_URL が設定されていません(.env を確認)')
+}
 
 const api = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 })
 
-export interface Topic {
-  id: number
+const feedbackApi = axios.create({
+  baseURL: FEEDBACK_API_BASE_URL,
+})
+
+export interface Source {
   title: string
-  content: string
-  order: number
+  url: string
 }
 
-export interface Episode {
-  id: number
-  title: string
+export interface TodayEpisode {
+  id: string
+  date: string
+  day_of_week: string
+  topic: string
+  youtube_video_id: string
   youtube_url: string
-  published_at: string
   script: string
-  topics: Topic[]
-  created_at: string
-  updated_at: string
-}
-
-export interface EpisodeListItem {
-  id: number
-  title: string
-  youtube_url: string
+  sources: Source[]
   published_at: string
-  topics: string[]
 }
 
-export interface PaginatedResponse<T> {
+interface TodayResponse {
+  episodes: TodayEpisode[]
   count: number
-  next: string | null
-  previous: string | null
-  results: T[]
 }
 
-// 最新のエピソードを取得
-export const getLatestEpisode = async (): Promise<Episode> => {
-  const response = await api.get<Episode>('/episodes/latest/')
-  return response.data
+// 本日配信の全エピソードを取得(平日は1件、土曜は2件になりうる)。未配信の場合は404
+export const getTodayEpisodes = async (): Promise<TodayEpisode[]> => {
+  const response = await api.get<TodayResponse>('/today')
+  return response.data.episodes
 }
 
-// エピソード一覧を取得（ページネーション付き）
-export const getEpisodes = async (page: number = 1): Promise<PaginatedResponse<EpisodeListItem>> => {
-  const response = await api.get<PaginatedResponse<EpisodeListItem>>(`/episodes/?page=${page}`)
-  return response.data
+export interface FeedbackPayload {
+  message: string
+  name?: string
+  episode_id?: string
 }
 
-// エピソード詳細を取得
-export const getEpisode = async (id: number): Promise<Episode> => {
-  const response = await api.get<Episode>(`/episodes/${id}/`)
+interface FeedbackResponse {
+  status: string
+  id: string
+}
+
+// 感想・要望を送信。同一IPから60秒以内に3件を超えるとAPI側が429を返す
+export const submitFeedback = async (payload: FeedbackPayload): Promise<FeedbackResponse> => {
+  const response = await feedbackApi.post<FeedbackResponse>('/', payload)
   return response.data
 }
 

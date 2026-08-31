@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --color-background: #ffffff;
@@ -12,22 +13,63 @@
   --color-border: #e8e7ea;
   --color-card: #ffffff;
   --color-card-foreground: #3a2f45;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
 }
 
 :root.dark {
-  --color-background: #1a1621;
+  --color-background: #323238;
   --color-foreground: #f3f4f6;
   --color-primary: #ff8c42;
   --color-primary-foreground: #0a0509;
-  --color-secondary: #2f2838;
+  --color-secondary: #3e3e44;
   --color-secondary-foreground: #f3f4f6;
-  --color-muted: #2f2838;
-  --color-muted-foreground: #a3a3a3;
-  --color-border: #2f2838;
-  --color-card: #1a1621;
+  --color-muted: #3e3e44;
+  --color-muted-foreground: #b0b0b3;
+  --color-border: #4a4a52;
+  --color-card: #323238;
   --color-card-foreground: #f3f4f6;
+  --color-destructive: #f87171;
+  --color-destructive-foreground: #323238;
 }
 
 body {
   font-family: system-ui, -apple-system, sans-serif;
+}
+
+@keyframes terminal-blink {
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+.markdown-body {
+  --tw-prose-body: var(--color-card-foreground);
+  --tw-prose-headings: var(--color-card-foreground);
+  --tw-prose-bold: var(--color-card-foreground);
+  --tw-prose-links: var(--color-primary);
+  --tw-prose-bullets: var(--color-primary);
+  --tw-prose-counters: var(--color-primary);
+  --tw-prose-hr: var(--color-border);
+  --tw-prose-quotes: var(--color-card-foreground);
+  --tw-prose-quote-borders: var(--color-primary);
+  --tw-prose-code: var(--color-card-foreground);
+}
+
+/* proseデフォルトの見出しサイズは幅の狭いモバイルだと2行に折れて間延びするため、
+   狭い画面では控えめなサイズにし、sm以上で本来のサイズに戻す */
+.markdown-body :is(h1, h2) {
+  font-size: 1.15rem;
+  line-height: 1.5;
+}
+.markdown-body h3 {
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+@media (min-width: 640px) {
+  .markdown-body :is(h1, h2) {
+    font-size: 1.5rem;
+  }
+  .markdown-body h3 {
+    font-size: 1.25rem;
+  }
 }

@@ -12,6 +12,17 @@ dist
 dist-ssr
 *.local
 
+# Env files (contain env-specific config; see .env.example)
+.env
+.env.*
+!.env.example
+
+# Tooling-local artifacts (not part of the product)
+.firebase/
+.claude/
+.agents/
+skills-lock.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
